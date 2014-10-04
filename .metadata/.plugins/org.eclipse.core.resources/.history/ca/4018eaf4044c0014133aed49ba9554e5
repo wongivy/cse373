@@ -362,7 +362,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     }
     
     public void run() {
-        JFrame f = new JFrame("Image Enhancer WITH Undo AND Redo by Ivy Wong"); // Students should update this.
+        JFrame f = new JFrame("ImageEnhancer without Undo or Redo"); // Students should update this.
         f.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {System.exit(0);}
         });
@@ -413,13 +413,6 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
          */
         // Add each of the two new menu items to the popup menu.
         // Also, add the action listener to each item, just as for the other items above.
-        
-        menuItem = new JMenuItem("5: Undo");
-        menuItem.addActionListener(si);
-        popup.add(menuItem);
-        menuItem = new JMenuItem("6: Redo");
-        menuItem.addActionListener(si);
-        popup.add(menuItem);
         
         // end of your code for this.
     }
