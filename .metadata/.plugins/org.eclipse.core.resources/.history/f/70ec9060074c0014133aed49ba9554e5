@@ -5,7 +5,7 @@ public class ImageStack {
 	private ArrayList imageStack; 
 	
 	public ImageStack() {
-		imageStack = new ArrayList();
+		
 	}
 	
 	private void push(dataItem) {
