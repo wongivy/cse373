@@ -282,8 +282,6 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     			 *   Write code to save the current state for undoing and dispose of any redoable actions.
     			 */
         	
-        	
-        	
         	    /* End of student's code to handle manipulation of Undo and Redo stacks when an image operation is performed. */
         	
         		biFiltered = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);

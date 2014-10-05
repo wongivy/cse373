@@ -282,8 +282,6 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     			 *   Write code to save the current state for undoing and dispose of any redoable actions.
     			 */
         	
-        	
-        	
         	    /* End of student's code to handle manipulation of Undo and Redo stacks when an image operation is performed. */
         	
         		biFiltered = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -386,8 +384,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
          */
         // Add code to create the new menu items here.
         
-        undoItem = new JMenuItem("5: Undo");
-        redoItem = new JMenuItem("6: Redo");
+        
         
         // Next, replace this call to the 0-argument constructor by a call to the new 2-argument constructor,
         // using as arguments the two new menu items.
@@ -428,8 +425,10 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         // Add each of the two new menu items to the popup menu.
         // Also, add the action listener to each item, just as for the other items above.
         
+        undoItem = new JMenuItem("5: Undo");
         undoItem.addActionListener(si);
         popup.add(undoItem);
+        redoItem = new JMenuItem("6: Redo");
         redoItem.addActionListener(si);
         popup.add(redoItem);
         

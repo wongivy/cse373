@@ -1,5 +1,5 @@
 package app;
-import java.util.ArrayList;
+import java.util.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -10,6 +10,12 @@ public class ImageStack {
 	
 	public ImageStack() {
 		imageStack = new ArrayList<BufferedImage>();
+		wasPopLast = false;
+	}
+	
+	public ImageStack(BufferedImage dataItem) {
+		imageStack = new ArrayList<BufferedImage>();
+		this.dataItem = dataItem;
 		wasPopLast = false;
 	}
 	
