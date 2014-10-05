@@ -1,39 +1,60 @@
 package app;
 import java.util.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 public class ImageStack {
-	private ArrayList imageStack; 
+	private ArrayList<BufferedImage> imageStack; 
+	private BufferedImage dataItem;
+	private Boolean wasPopLast;
 	
 	public ImageStack() {
-		imageStack = new ArrayList();
+		imageStack = new ArrayList<BufferedImage>();
+		wasPopLast = false;
 	}
 	
-	private void push(dataItem) {
-		
+	public ImageStack(BufferedImage dataItem) {
+		imageStack = new ArrayList<BufferedImage>();
+		this.dataItem = dataItem;
+		wasPopLast = false;
 	}
 	
-	private void pop() {
-		
+	private void push(BufferedImage dataItem) {
+		imageStack.add(dataItem);
+		wasPopLast = false;
 	}
 	
-	private void peek() {
-		
+	private BufferedImage pop() throws Exception {
+		try {
+			BufferedImage topImage = imageStack.remove(imageStack.size() - 1);
+			wasPopLast = true;
+			return topImage;
+		} catch(Exception stackIsEmpty) {
+			return null;
+		}
 	}
 	
-	private void isEmpty() {
-		
+	private BufferedImage peek() throws Exception{
+		try {
+			return imageStack.get(imageStack.size() - 1);
+		} catch(Exception stackIsEmpty) {
+			return null;
+		}
+	}
+	
+	private boolean isEmpty() {
+		return imageStack.isEmpty();
 	}
 	
 	private void clear() {
-		
+		imageStack.clear();
 	}
 	
-	private void popWasLast() {
-		
+	private Boolean popWasLast() {
+		return wasPopLast;
 	}
 	
-	private void getSize() {
-		
+	private int getSize() {
+		return imageStack.size();
 	}
-	
 }

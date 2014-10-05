@@ -1,0 +1,49 @@
+package app;
+import java.util.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+
+public class ImageStack {
+	private ArrayList<BufferedImage> undoStack; 
+ 	private ArrayList<BufferedImage> redoStack;
+	private BufferedImage dataItem;
+	
+	public ImageStack() {
+		undoStack = new ArrayList<BufferedImage>();
+		redoStack = new ArrayList<BufferedImage>();
+	}
+	
+	public ImageStack(BufferedImage dataItem) {
+		undoStack = new ArrayList<BufferedImage>();
+		redoStack = new ArrayList<BufferedImage>();
+		this.dataItem = dataItem;
+	}
+	
+	private void push(BufferedImage dataItem) {
+		undoStack.add(dataItem);
+	}
+	
+	private BufferedImage pop() throws Exception {
+		imageStack.remove(imageStack.size() - 1);
+	}
+	
+	private void peek() {
+		
+	}
+	
+	private void isEmpty() {
+		
+	}
+	
+	private void clear() {
+		
+	}
+	
+	private void popWasLast() {
+		
+	}
+	
+	private void getSize() {
+		
+	}
+}

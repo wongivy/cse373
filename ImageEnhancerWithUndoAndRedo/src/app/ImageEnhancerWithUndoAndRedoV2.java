@@ -97,9 +97,12 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     LookupOp op0, op3, op4;
     
     static JPopupMenu popup;
+   
 
     // Here, you should declare two variables to hold instances of your stack class, with one for Undo and one for Redo.
     
+    private BufferedImage undo;
+    private BufferedImage redo;
     
     /**
      * ==================================================================> NEW FEATURES FOR UI TEST

@@ -1,0 +1,43 @@
+package app;
+import java.util.*;
+import java.awt.image.BufferedImage;
+
+public class ImageStack {
+	private ArrayList<BufferedImage> imageStack; 
+	private BufferedImage dataItem;
+	
+	public ImageStack() {
+		imageStack = new ArrayList<BufferedImage>();
+	}
+	
+	public ImageStack(BufferedImage dataItem) {
+		imageStack = new ArrayList<BufferedImage>();
+	}
+	
+	private void push(dataItem) {
+	}
+	
+	private void pop() {
+		
+	}
+	
+	private void peek() {
+		
+	}
+	
+	private void isEmpty() {
+		
+	}
+	
+	private void clear() {
+		
+	}
+	
+	private void popWasLast() {
+		
+	}
+	
+	private void getSize() {
+		
+	}
+}
