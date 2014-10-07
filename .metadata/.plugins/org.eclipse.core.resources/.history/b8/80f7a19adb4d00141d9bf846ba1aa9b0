@@ -110,7 +110,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     private ImageEnhancerWithUndoAndRedoV2 si;
 	private JMenuItem undoItem;	 // Here's a new field to provide access to the Undo menu item.
     private JMenuItem redoItem;  // and one for the Redo menu item.
-    
+
     private JComboBox formats;
 
     public static final float[] SHARPEN3x3 = { // sharpening filter kernel
@@ -131,8 +131,8 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     public ImageEnhancerWithUndoAndRedoV2(JMenuItem undoItem, JMenuItem redoItem) { // Version of the constructor taking 2 arguments.
    	 	this();
    	 	this.undoItem = undoItem;
-   	 	this.redoItem = redoItem;   	 	
-   	 	
+   	 	this.redoItem = redoItem;
+
    	 	/**
    	     * ==================================================================> STUDENT SHOULD DO THIS
    	     * Add code to initialize the state of the menu items undoItem and redoItem, so that they are disabled
@@ -141,6 +141,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
    	 	
    	 	this.undoItem.setEnabled(false);
    	 	this.redoItem.setEnabled(false);
+   	 	
    	 	
    	 	// end of your code for initializing menu items' state.
     }
@@ -171,7 +172,6 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         redoStack = new ImageStack();
         
         // We add a listener to this component so that it can bring up popup menus.
-        
         MouseListener popupListener = new PopupListener();
         addMouseListener(popupListener);
 
@@ -273,11 +273,10 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         		if (undoStack.getSize() == 1) {
         			undoStack.pop();
         			biFiltered = biOriginal;
-        		} else {
-            		biFiltered = undoStack.pop();
-        		}
-        		redoStack.push(filtered);
-            	redoItem.setEnabled(true);            	            	
+        		} 
+	        		redoStack.push(biFiltered);
+	        		biFiltered = undoStack.pop();
+	            	redoItem.setEnabled(true);   
         	} catch(Exception e) {
         		
         	}      
@@ -285,8 +284,9 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         		undoItem.setEnabled(false);
         	} 
         	break;
-        	        
-        case 6: // redo
+        	
+        
+        case 6: 
         	try {
         		undoStack.push(filtered);
         		biFiltered = redoStack.pop();
@@ -295,13 +295,13 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         		
         	} 
         	if (redoStack.isEmpty()) {
-        		redoItem.setEnabled(false);        		
+        		redoItem.setEnabled(false);
         	}
         	break;
-        
         default:return;
-        	
+
         }
+        
         
         /* Rather than directly drawing the filtered image to the
          * destination, we filter it into a new image first, then that
@@ -317,7 +317,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         		redoStack.clear();
         		undoItem.setEnabled(true);
         		redoItem.setEnabled(false);
-        		        	
+        	
         	    /* End of student's code to handle manipulation of Undo and Redo stacks when an image operation is performed. */
         	
         		biFiltered = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
