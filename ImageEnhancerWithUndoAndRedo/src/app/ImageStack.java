@@ -5,7 +5,6 @@ import java.io.*;
 
 public class ImageStack {
 	private ArrayList<BufferedImage> imageStack; 
-	private BufferedImage dataItem;
 	private Boolean wasPopLast;
 	
 	public ImageStack() {
@@ -13,12 +12,12 @@ public class ImageStack {
 		wasPopLast = false;
 	}
 	
-	private void push(BufferedImage dataItem) {
+	public void push(BufferedImage dataItem) {
 		imageStack.add(dataItem);
 		wasPopLast = false;
 	}
 	
-	private BufferedImage pop() throws Exception {
+	public BufferedImage pop() throws Exception {
 		try {
 			BufferedImage topImage = imageStack.remove(imageStack.size() - 1);
 			wasPopLast = true;
@@ -28,7 +27,7 @@ public class ImageStack {
 		}
 	}
 	
-	private BufferedImage peek() throws Exception{
+	public BufferedImage peek() throws Exception{
 		try {
 			return imageStack.get(imageStack.size() - 1);
 		} catch(Exception stackIsEmpty) {
@@ -36,19 +35,19 @@ public class ImageStack {
 		}
 	}
 	
-	private boolean isEmpty() {
+	public boolean isEmpty() {
 		return imageStack.isEmpty();
 	}
 	
-	private void clear() {
+	public void clear() {
 		imageStack.clear();
 	}
 	
-	private Boolean popWasLast() {
+	public Boolean popWasLast() {
 		return wasPopLast;
 	}
 	
-	private int getSize() {
+	public int getSize() {
 		return imageStack.size();
 	}
 }
