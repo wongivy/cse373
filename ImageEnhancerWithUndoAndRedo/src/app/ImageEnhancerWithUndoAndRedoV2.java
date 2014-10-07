@@ -63,9 +63,11 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ByteLookupTable;
+import java.awt.image.ColorModel;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.LookupOp;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -221,7 +223,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     
     int lastOp;
     public void filterImage() {
-    	BufferedImage filtered = biFiltered;
+    	BufferedImage filtered = null;
         BufferedImageOp op = null;
         lastOp = opIndex;
         switch (opIndex) {
@@ -270,13 +272,8 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
 
         case 5: // undo
         	try {
-        		if (undoStack.getSize() == 1) {
-        			undoStack.pop();
-        			biFiltered = biOriginal;
-        		} else {
-            		biFiltered = undoStack.pop();
-        		}
-        		redoStack.push(filtered);
+            	biFiltered = undoStack.pop();
+        		redoStack.push(makeCopy(biWorking));
             	redoItem.setEnabled(true);            	            	
         	} catch(Exception e) {
         		
@@ -288,7 +285,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         	        
         case 6: // redo
         	try {
-        		undoStack.push(filtered);
+        		undoStack.push(makeCopy(biWorking));
         		biFiltered = redoStack.pop();
         		undoItem.setEnabled(true);
         	} catch(Exception e) {
@@ -313,7 +310,8 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     			 *   Write code to save the current state for undoing and dispose of any redoable actions.
     			 */
         	
-        		undoStack.push(filtered);
+                undoStack.push(makeCopy(biWorking));
+                
         		redoStack.clear();
         		undoItem.setEnabled(true);
         		redoItem.setEnabled(false);
@@ -473,5 +471,9 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     	// Uncomment this code that prints out the numbers of elements in each of the two stacks (Undo and Redo):
         System.out.println("Undo stack has " + undoStack.getSize() + " elements.");
         System.out.println("Redo stack has " + redoStack.getSize() + " elements.");
+    }
+    
+    private static BufferedImage makeCopy(BufferedImage source) {
+    	return new BufferedImage(source.getColorModel(), source.copyData(null), source.isAlphaPremultiplied(), null);
     }
 }
