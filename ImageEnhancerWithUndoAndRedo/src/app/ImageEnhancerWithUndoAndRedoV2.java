@@ -71,6 +71,7 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -113,6 +114,8 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
 	private JMenuItem undoItem;	 // Here's a new field to provide access to the Undo menu item.
     private JMenuItem redoItem;  // and one for the Redo menu item.
     
+    private JMenuItem dropRedoItem; 
+    
     private JComboBox formats;
 
     public static final float[] SHARPEN3x3 = { // sharpening filter kernel
@@ -130,10 +133,12 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     /**
      * ==================================================================> NEW FEATURES FOR UI TEST
      */
-    public ImageEnhancerWithUndoAndRedoV2(JMenuItem undoItem, JMenuItem redoItem) { // Version of the constructor taking 2 arguments.
+    public ImageEnhancerWithUndoAndRedoV2(JMenuItem undoItem, JMenuItem redoItem, JMenuItem dropRedoItem) { // Version of the constructor taking 2 arguments.
    	 	this();
    	 	this.undoItem = undoItem;
    	 	this.redoItem = redoItem;   	 	
+   	 	
+   	 	this.dropRedoItem = dropRedoItem;
    	 	
    	 	/**
    	     * ==================================================================> STUDENT SHOULD DO THIS
@@ -143,6 +148,8 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
    	 	
    	 	this.undoItem.setEnabled(false);
    	 	this.redoItem.setEnabled(false);
+   	 	
+   	 	this.dropRedoItem.setEnabled(false);
    	 	
    	 	// end of your code for initializing menu items' state.
     }
@@ -272,14 +279,14 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
 
         case 5: // undo
         	try {
-            	biFiltered = undoStack.pop();
         		redoStack.push(makeCopy(biWorking));
-            	redoItem.setEnabled(true);            	            	
-        	} catch(Exception e) {
-        		
-        	}      
-        	if (undoStack.isEmpty()) {
-        		undoItem.setEnabled(false);
+            	biFiltered = undoStack.pop();
+            	redoItem.setEnabled(true);       
+            	dropRedoItem.setEnabled(true);
+            	if (undoStack.isEmpty()) {
+            		undoItem.setEnabled(false);
+            	}
+        	} catch(EmptyStackException e) {
         	} 
         	break;
         	        
@@ -288,14 +295,25 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         		undoStack.push(makeCopy(biWorking));
         		biFiltered = redoStack.pop();
         		undoItem.setEnabled(true);
-        	} catch(Exception e) {
-        		
-        	} 
-        	if (redoStack.isEmpty()) {
-        		redoItem.setEnabled(false);        		
+            	if (redoStack.isEmpty()) {
+            		redoItem.setEnabled(false);   
+            		dropRedoItem.setEnabled(false);
+            	}
+        	} catch(EmptyStackException e) {
         	}
         	break;
         
+        case 7: //drop redo item 
+        	try {
+        		redoStack.pop();
+            	if(redoStack.isEmpty()) {
+            		redoItem.setEnabled(false);
+            		dropRedoItem.setEnabled(false);
+            	}
+        	} catch(EmptyStackException e) {
+        	}
+        	break;
+        	
         default:return;
         	
         }
@@ -304,17 +322,17 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
          * destination, we filter it into a new image first, then that
          * filtered image is ready for writing out or painting. 
          */
-        if(opIndex != 5 && opIndex != 6) {
+        if(opIndex != 5 && opIndex != 6 && opIndex != 7) {
     			/**
     			 * ==================================================================> STUDENT SHOULD DO THIS
     			 *   Write code to save the current state for undoing and dispose of any redoable actions.
     			 */
         	
                 undoStack.push(makeCopy(biWorking));
-                
         		redoStack.clear();
         		undoItem.setEnabled(true);
         		redoItem.setEnabled(false);
+        		dropRedoItem.setEnabled(false);
         		        	
         	    /* End of student's code to handle manipulation of Undo and Redo stacks when an image operation is performed. */
         	
@@ -420,9 +438,11 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         undoItem = new JMenuItem("5: Undo");
         redoItem = new JMenuItem("6: Redo");
         
+        dropRedoItem = new JMenuItem("7: Drop Redo Item");
+        
         // Next, replace this call to the 0-argument constructor by a call to the new 2-argument constructor,
         // using as arguments the two new menu items.
-        si = new ImageEnhancerWithUndoAndRedoV2(undoItem, redoItem); 
+        si = new ImageEnhancerWithUndoAndRedoV2(undoItem, redoItem, dropRedoItem); 
         
         f.add("Center", si);
         formats = new JComboBox(si.getFormats());
@@ -464,6 +484,8 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         redoItem.addActionListener(si);
         popup.add(redoItem);
         
+        dropRedoItem.addActionListener(si);
+        popup.add(dropRedoItem);
         // end of your code for this.
     }
     
@@ -473,6 +495,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         System.out.println("Redo stack has " + redoStack.getSize() + " elements.");
     }
     
+    //
     private static BufferedImage makeCopy(BufferedImage source) {
     	return new BufferedImage(source.getColorModel(), source.copyData(null), source.isAlphaPremultiplied(), null);
     }

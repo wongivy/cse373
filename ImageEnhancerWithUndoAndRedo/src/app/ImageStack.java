@@ -1,7 +1,7 @@
 package app;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.awt.image.BufferedImage;
-import java.io.*;
 
 public class ImageStack {
 	private ArrayList<BufferedImage> imageStack; 
@@ -17,21 +17,22 @@ public class ImageStack {
 		wasPopLast = false;
 	}
 	
-	public BufferedImage pop() throws Exception {
-		try {
+	public BufferedImage pop() throws EmptyStackException {
+		if (imageStack.isEmpty()) {
+			throw new EmptyStackException();
+		} else {
 			BufferedImage topImage = imageStack.remove(imageStack.size() - 1);
 			wasPopLast = true;
-			return topImage;
-		} catch(Exception stackIsEmpty) {
-			return null;
+			return topImage;			
 		}
 	}
 	
-	public BufferedImage peek() throws Exception{
-		try {
+	public BufferedImage peek() throws EmptyStackException {
+		if (imageStack.isEmpty()) {
+			throw new EmptyStackException();
+		} else {
 			return imageStack.get(imageStack.size() - 1);
-		} catch(Exception stackIsEmpty) {
-			return null;
+			
 		}
 	}
 	
