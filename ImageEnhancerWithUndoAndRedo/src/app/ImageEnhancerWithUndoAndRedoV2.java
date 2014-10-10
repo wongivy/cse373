@@ -1,4 +1,16 @@
 package app;
+
+/*
+ * ImageEnhancerWithUndoAndRedoV2.java
+ * by Ivy Wong for CSE 373 Assignment 1, Autumn 2014
+ * This program is an enhanced version of the Image Enhancer program 
+ * provided by Oracle.com and subsequently modified by S. Tanimoto,
+ * the instructor for CSE 373. In this version, the edits to an image
+ * can be undone and redone. 
+ * 
+ * I completed Options A1E3.
+ */
+
 /*
  * ImageEnhancerWithUndoAndRedoV2.java
  * Si J. Liu and S. Tanimoto,  Oct 1, 2014.
@@ -63,11 +75,9 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.ByteLookupTable;
-import java.awt.image.ColorModel;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.LookupOp;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -113,8 +123,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     private ImageEnhancerWithUndoAndRedoV2 si;
 	private JMenuItem undoItem;	 // Here's a new field to provide access to the Undo menu item.
     private JMenuItem redoItem;  // and one for the Redo menu item.
-    
-    private JMenuItem dropRedoItem; 
+    private JMenuItem dropRedoItem; // New Field to access the Drop Redo Item
     
     private JComboBox formats;
 
@@ -133,22 +142,21 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
     /**
      * ==================================================================> NEW FEATURES FOR UI TEST
      */
-    public ImageEnhancerWithUndoAndRedoV2(JMenuItem undoItem, JMenuItem redoItem, JMenuItem dropRedoItem) { // Version of the constructor taking 2 arguments.
+    public ImageEnhancerWithUndoAndRedoV2(JMenuItem undoItem, JMenuItem redoItem, JMenuItem dropRedoItem) { // Version of the constructor taking 3 arguments.
    	 	this();
    	 	this.undoItem = undoItem;
    	 	this.redoItem = redoItem;   	 	
-   	 	
    	 	this.dropRedoItem = dropRedoItem;
    	 	
    	 	/**
    	     * ==================================================================> STUDENT SHOULD DO THIS
    	     * Add code to initialize the state of the menu items undoItem and redoItem, so that they are disabled
-   	     * using the JMenuItem method setEnabled(boolean).  Your code should go here :
+   	     * using the JMenuItem method setEnabled(boolean).  Also initializes the state of the Drop Redo Item.
+   	     * Your code should go here :
    	     */
    	 	
    	 	this.undoItem.setEnabled(false);
    	 	this.redoItem.setEnabled(false);
-   	 	
    	 	this.dropRedoItem.setEnabled(false);
    	 	
    	 	// end of your code for initializing menu items' state.
@@ -277,7 +285,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
             op = op4;
             break;
 
-        case 5: // undo
+        case 5: // Undo
         	try {
         		redoStack.push(makeCopy(biWorking));
             	biFiltered = undoStack.pop();
@@ -287,6 +295,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
             		undoItem.setEnabled(false);
             	}
         	} catch(EmptyStackException e) {
+        		
         	} 
         	break;
         	        
@@ -300,10 +309,11 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
             		dropRedoItem.setEnabled(false);
             	}
         	} catch(EmptyStackException e) {
+        		
         	}
         	break;
         
-        case 7: //drop redo item 
+        case 7: //Drops the image that should be redo
         	try {
         		redoStack.pop();
             	if(redoStack.isEmpty()) {
@@ -311,6 +321,7 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
             		dropRedoItem.setEnabled(false);
             	}
         	} catch(EmptyStackException e) {
+        		
         	}
         	break;
         	
@@ -342,7 +353,6 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         gWorking.drawImage(biFiltered, 0, 0, null);
         printNumberOfElementsInBothStack();
     }
-
 
     /* Returns the formats sorted alphabetically and in lower case */
     public String[] getFormats() {
@@ -429,16 +439,15 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         
         /**
          * ==================================================================> STUDENT SHOULD DO THIS
-         * Write code to create the two new menu items for Undo and Redo.
+         * Write code to create the two new menu items for Undo and Redo and Drop Redo Item.
          * Call the new constructor for class ImageEnhancerWithUndoAndRedoV2, passing in two arguments:
-         * the Undo menu item and the Redo menu item.
+         * the Undo menu item and the Redo menu item and the Drop Redo Item menu item.
          */
         // Add code to create the new menu items here.
         
         undoItem = new JMenuItem("5: Undo");
         redoItem = new JMenuItem("6: Redo");
-        
-        dropRedoItem = new JMenuItem("7: Drop Redo Item");
+        dropRedoItem = new JMenuItem("7: Drop this Redo Item");
         
         // Next, replace this call to the 0-argument constructor by a call to the new 2-argument constructor,
         // using as arguments the two new menu items.
@@ -483,7 +492,6 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         popup.add(undoItem);
         redoItem.addActionListener(si);
         popup.add(redoItem);
-        
         dropRedoItem.addActionListener(si);
         popup.add(dropRedoItem);
         // end of your code for this.
@@ -495,8 +503,14 @@ public class ImageEnhancerWithUndoAndRedoV2 extends Component implements ActionL
         System.out.println("Redo stack has " + redoStack.getSize() + " elements.");
     }
     
-    //
-    private static BufferedImage makeCopy(BufferedImage source) {
-    	return new BufferedImage(source.getColorModel(), source.copyData(null), source.isAlphaPremultiplied(), null);
+    /**
+     * Returns a copy of the given image
+     * 
+     * @param sourceImage The BufferedImage that is to be copied
+     * @return copyImage The copy of the given BufferedImage
+     */
+    private static BufferedImage makeCopy(BufferedImage sourceImage) {
+    	BufferedImage copyImage = new BufferedImage(sourceImage.getColorModel(), sourceImage.copyData(null), sourceImage.isAlphaPremultiplied(), null);
+    	return copyImage;
     }
 }
